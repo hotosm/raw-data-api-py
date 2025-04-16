@@ -1,0 +1,20 @@
+[project]
+name = "raw-data-api-py"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.11.16",
+]
+
+[dependency-groups]
+test = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
+dev = [
+    "geopandas>=1.0.1",
+    "mercantile>=1.2.1",
+    "shapely>=2.1.0",
+]
