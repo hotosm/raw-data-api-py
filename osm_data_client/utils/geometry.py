@@ -1,4 +1,13 @@
-from typing import Dict, Any, Tuple, Union, Optional
+"""
+Geometry utility functions for the OSM Data Client.
+
+This module provides utility functions for working with GeoJSON geometry objects.
+"""
+
+import logging
+from typing import Dict, Any
+
+log = logging.getLogger(__name__)
 
 def bbox_to_polygon(min_x: float, min_y: float, max_x: float, max_y: float) -> Dict[str, Any]:
     """
@@ -13,6 +22,15 @@ def bbox_to_polygon(min_x: float, min_y: float, max_x: float, max_y: float) -> D
     Returns:
         GeoJSON Polygon
     """
+    log.debug("Converting bbox [%f, %f, %f, %f] to polygon", min_x, min_y, max_x, max_y)
+    
+    # Basic validation
+    if min_x > max_x or min_y > max_y:
+        log.warning("Invalid bbox: min values greater than max values")
+    
+    if not (-180 <= min_x <= 180 and -180 <= max_x <= 180 and -90 <= min_y <= 90 and -90 <= max_y <= 90):
+        log.warning("Bbox coordinates outside normal lat/lon ranges")
+    
     return {
         "type": "Polygon",
         "coordinates": [[
@@ -23,41 +41,3 @@ def bbox_to_polygon(min_x: float, min_y: float, max_x: float, max_y: float) -> D
             [min_x, min_y]
         ]]
     }
-
-def convert_from_crs(geometry: Dict[str, Any], from_crs: str, to_crs: str = "4326") -> Dict[str, Any]:
-    """
-    Convert a geometry from one CRS to another.
-    
-    This function requires geopandas to be installed.
-    
-    Args:
-        geometry: GeoJSON geometry to convert
-        from_crs: Source CRS (e.g., "3857")
-        to_crs: Target CRS (e.g., "4326")
-        
-    Returns:
-        Converted GeoJSON geometry
-        
-    Raises:
-        ImportError: If geopandas is not installed
-    """
-    try:
-        import geopandas as gpd
-        from shapely.geometry import shape
-    except ImportError:
-        raise ImportError(
-            "This function requires geopandas and shapely. "
-            "Install with: pip install geopandas shapely"
-        )
-    
-    # Create a GeoDataFrame from the geometry
-    gdf = gpd.GeoDataFrame(
-        geometry=[shape(geometry)], 
-        crs=f"EPSG:{from_crs}"
-    )
-    
-    # Convert to target CRS
-    gdf = gdf.to_crs(f"EPSG:{to_crs}")
-    
-    # Return the converted geometry
-    return gdf.geometry.values[0].__geo_interface__
