@@ -110,7 +110,6 @@ result = await get_osm_data(
 result = await get_osm_data(
     geometry,
     outputType="shp",
-    bindZip=True,  # Required for multi-file formats
     filters={"tags": {"all_geometry": {"highway": []}}}
 )
 ```
