@@ -98,13 +98,13 @@ class TestCliIntegration:
         result = self.run_cli_command([], check=False)
 
         assert result.returncode != 0
-        assert "--geojson" in result.stderr and "--bbox" in result.stderr
+        assert "--geojson" in result.stderr and "--bounds" in result.stderr
 
     @pytest.mark.skipif(
         os.environ.get("SKIP_API_TESTS") == "1",
         reason="Skipping tests that require API access"
     )
-    def test_bbox_download(self):
+    def test_bounds_download(self):
         """Test downloading data for a bounding box."""
         output_file = OUTPUT_DIR / "bbox_test.geojson"
         
@@ -113,7 +113,7 @@ class TestCliIntegration:
             output_file.unlink()
 
         result = self.run_cli_command([
-            "--bbox", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
+            "--bounds", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
             "--feature-type", "building",
             "--out", str(output_file)
         ])
@@ -168,7 +168,7 @@ class TestCliIntegration:
             output_file.unlink()
 
         result = self.run_cli_command([
-            "--bbox", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
+            "--bounds", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
             "--feature-type", "building",
             "--out", str(output_file),
             "--extract"  # Force extraction
@@ -203,7 +203,7 @@ class TestCliIntegration:
             output_file.unlink()
 
         result = self.run_cli_command([
-            "--bbox", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
+            "--bounds", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
             "--feature-type", "building",
             "--out", str(output_file),
             "--no-zip"  # Request unzipped data
@@ -237,7 +237,7 @@ class TestCliIntegration:
             shutil.rmtree(csv_dir)
 
         result = self.run_cli_command([
-            "--bbox", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
+            "--bounds", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
             "--feature-type", "building",
             "--out", str(output_file),
             "--format", "csv"  # Test CSV format
@@ -279,7 +279,7 @@ class TestCliIntegration:
             output_file.unlink()
 
         result = self.run_cli_command([
-            "--bbox", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
+            "--bounds", str(TINY_BBOX[0]), str(TINY_BBOX[1]), str(TINY_BBOX[2]), str(TINY_BBOX[3]),
             "--feature-type", "building",
             "--out", str(output_file),
             "--api-url", "https://api-prod.raw-data.hotosm.org/v1"  # Explicit API URL

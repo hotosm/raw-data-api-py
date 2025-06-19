@@ -56,9 +56,9 @@ async def run_cli(args: argparse.Namespace) -> int:
     """
     try:
         # Prepare geometry
-        if args.bbox:
-            log.info("Using bounding box: %s", args.bbox)
-            geometry = bbox_to_polygon(*args.bbox)
+        if args.bounds:
+            log.info("Using bounding box: %s", args.bounds)
+            geometry = bbox_to_polygon(*args.bounds)
         else:
             geojson_path = Path(args.geojson)
             if geojson_path.exists():
@@ -150,11 +150,11 @@ def main() -> int:
         "--geojson", type=str, help="Path to GeoJSON file or GeoJSON string."
     )
     group.add_argument(
-        "--bbox",
+        "--bounds",
         nargs=4,
         type=float,
         metavar=("xmin", "ymin", "xmax", "ymax"),
-        help="Bounding box coordinates (assumed to be in EPSG:4326).",
+        help="Bounds coordinates (assumed to be in EPSG:4326).",
     )
     
     parser.add_argument(
@@ -224,8 +224,8 @@ def main() -> int:
         print(f"OSM Data Client version {ver}")
         return 0
 
-    if not args.geojson and not args.bbox:
-        parser.error("one of the arguments --geojson --bbox is required")
+    if not args.geojson and not args.bounds:
+        parser.error("one of the arguments --geojson --bounds is required")
 
     # Run the CLI asynchronously
     return asyncio.run(run_cli(args))
