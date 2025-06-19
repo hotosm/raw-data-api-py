@@ -1,10 +1,10 @@
-site_name: pg-nearest-city
-site_description: Given a geopoint, find the nearest city using PostGIS (reverse geocode).
+site_name: raw-data-api-py
+site_description: A Python client for the Humanitarian OpenStreetMap Team (HOT) Raw Data API.
 # strict: true
 site_url: "https://www.hotosm.org"
 
-repo_name: "hotosm/pg-nearest-city"
-repo_url: "https://github.com/hotosm/pg-nearest-city/"
+repo_name: "hotosm/raw-data-api-py"
+repo_url: "https://github.com/hotosm/raw-data-api-py/"
 edit_uri: "edit/main/docs/"
 
 extra:
@@ -61,4 +61,3 @@ nav:
       - Code of Conduct: https://docs.hotosm.org/code-of-conduct
       - Versioning: https://docs.hotosm.org/dev-guide/repo-management/version-control/#creating-releases
   - API: api.md
-  - Benchmarks: benchmark-results.md
