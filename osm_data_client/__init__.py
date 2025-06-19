@@ -5,11 +5,11 @@ This library provides tools for fetching OpenStreetMap data through the
 Raw Data API provided by the Humanitarian OpenStreetMap Team (HOT).
 """
 
-import logging
+# import logging
+# TODO why do we have this line?
+# logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-
-from .exceptions import (
+from osm_data_client.exceptions import (
     OSMClientError,
     ValidationError,
     APIRequestError,
@@ -17,7 +17,7 @@ from .exceptions import (
     DownloadError,
 )
 
-from .models import (
+from osm_data_client.models import (
     GeometryInput,
     RequestParams,
     RawDataApiMetadata,
@@ -25,8 +25,8 @@ from .models import (
     RawDataClientConfig,
     RawDataOutputOptions,
 )
-from .processing import RawDataResult
-from .client import get_osm_data, RawDataClient, RawDataAPI
+from osm_data_client.processing import RawDataResult
+from osm_data_client.client import get_osm_data, RawDataClient, RawDataAPI
 
 __version__ = "0.1.0"
 

@@ -1,6 +1,8 @@
 # Integration Tests for OSM Data Client
 
-This directory contains integration tests for the OSM Data Client. These tests verify that the client works correctly with the actual API and file system.
+This directory contains integration tests for the OSM Data Client.
+These tests verify that the client works correctly with the actual
+API and file system.
 
 ## Running the Tests
 
@@ -39,8 +41,10 @@ The tests create a directory structure at `tests/test_data` with:
 - `fixtures/`: Input files for tests
 - `output/`: Output files generated during tests
 
-The test fixtures include sample GeoJSON files for testing the client with predefined geometries.
+The test fixtures include sample GeoJSON files for testing the
+client with predefined geometries.
 
 ## Test Environment Cleanup
 
-The tests clean up after themselves by removing the output directory when they're done.
+The tests clean up after themselves by removing the output
+directory when they're done.

@@ -10,7 +10,9 @@ pip install raw-data-api-py
 
 ## Conceptual Overview
 
-The OSM Data Client allows you to extract OpenStreetMap data for specific geographic areas through the HOT Raw Data API. The workflow follows this pattern:
+The OSM Data Client allows you to extract OpenStreetMap data for specific
+geographic areas through the HOT Raw Data API. The workflow follows this
+pattern:
 
 1. Define an area of interest (GeoJSON polygon)
 2. Configure filters for specific OpenStreetMap features
@@ -61,7 +63,9 @@ if __name__ == "__main__":
 Extract data using the CLI:
 
 ```bash
-python -m osm_data_client.cli --bounds -73.98 40.75 -73.97 40.76 --feature-type building --out buildings.geojson
+python -m osm_data_client.cli \
+  --bounds -73.98 40.75 -73.97 40.76 \
+  --feature-type building --out buildings.geojson
 ```
 
 ## Key Components
@@ -172,7 +176,7 @@ class AutoExtractOption(Enum):
 
 ## CLI Options
 
-```
+```bash
 python -m osm_data_client.cli [options]
 
 Options:
