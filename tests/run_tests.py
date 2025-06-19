@@ -14,26 +14,27 @@ TEST_PATTERN="test_cli.py::TestCliIntegration::test_cli_help" python tests/run_t
 import os
 import sys
 import subprocess
-from pathlib import Path
+
 
 def main():
     # Determine test pattern
     test_pattern = os.environ.get("TEST_PATTERN", "tests")
-    
+
     # Build pytest command
     cmd = [
-        "pytest", 
+        "pytest",
         "-xvs",  # x=exit on first failure, v=verbose, s=no capture
-        test_pattern
+        test_pattern,
     ]
-    
+
     print(f"Running tests: {' '.join(cmd)}")
-    
+
     # Run pytest
     result = subprocess.run(cmd)
-    
+
     # Return pytest's exit code
     return result.returncode
+
 
 if __name__ == "__main__":
     sys.exit(main())

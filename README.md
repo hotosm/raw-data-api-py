@@ -35,7 +35,7 @@ async def main():
             [-73.98, 40.75]
         ]]
     }
-    
+
     # Request building data
     result = await get_osm_data(
         geometry,
@@ -49,9 +49,9 @@ async def main():
             }
         }
     )
-    
+
     print(f"Data downloaded to: {result.path}")
-    
+
 if __name__ == "__main__":
     asyncio.run(main())
 ```
@@ -146,7 +146,7 @@ async def get_osm_data(
 class RawDataClient:
     async def get_osm_data(
         self,
-        geometry: Union[Dict[str, Any], str], 
+        geometry: Union[Dict[str, Any], str],
         output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
         **kwargs
     ) -> RawDataResult
@@ -177,7 +177,7 @@ python -m osm_data_client.cli [options]
 
 Options:
   --geojson PATH          Path to GeoJSON file or GeoJSON string
-  --bounds XMIN YMIN XMAX YMAX  
+  --bounds XMIN YMIN XMAX YMAX
                           Bounds coordinates in EPSG:4326
   --feature-type TYPE     Type of feature to download (default: "building")
   --out PATH              Output path (default: "./osm_data.geojson")

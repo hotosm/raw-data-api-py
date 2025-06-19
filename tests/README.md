@@ -1,6 +1,7 @@
 # Integration Tests for OSM Data Client
 
 This directory contains integration tests for the OSM Data Client. These tests verify that the client works correctly with the actual API and file system.
+
 ## Running the Tests
 
 ### Basic Usage
@@ -14,6 +15,7 @@ python tests/run_tests.py
 ### Skipping API Tests
 
 If you want to skip tests that make actual API calls:
+
 ```bash
 SKIP_API_TESTS=1 python tests/run_tests.py
 ```
