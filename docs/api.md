@@ -4,17 +4,17 @@
 
 ### Client
 
-::: osm_data_client.processing.get_osm_data
+::: osm_data_client.client.get_osm_data
 options:
 show_source: false
 heading_level: 3
 
-::: osm_data_client.processing.RawDataClient
+::: osm_data_client.client.RawDataClient
 options:
 show_source: false
 heading_level: 3
 
-::: osm_data_client.processing.RawDataAPI
+::: osm_data_client.client.RawDataAPI
 options:
 show_source: false
 heading_level: 3
