@@ -1,6 +1,45 @@
-# OSM Data Client
+# Raw Data API Python Client
 
-A Python client for the Humanitarian OpenStreetMap Team (HOT) Raw Data API.
+<!-- markdownlint-disable -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hotosm/raw-data-api-py/refs/heads/main/docs/images/hot_logo.png" style="width: 200px;" alt="HOT"></a>
+</p>
+<p align="center">
+  <em>A Python client for the Humanitarian OpenStreetMap Team (HOT) Raw Data API.</em>
+</p>
+<p align="center">
+  <a href="https://github.com/hotosm/raw-data-api-py/actions/workflows/docs.yml" target="_blank">
+      <img src="https://github.com/hotosm/raw-data-api-py/actions/workflows/docs.yml/badge.svg" alt="Publish Docs">
+  </a>
+  <a href="https://github.com/hotosm/raw-data-api-py/actions/workflows/publish.yml" target="_blank">
+      <img src="https://github.com/hotosm/raw-data-api-py/actions/workflows/publish.yml/badge.svg" alt="Publish">
+  </a>
+  <!-- <a href="https://github.com/hotosm/raw-data-api-py/actions/workflows/pytest.yml" target="_blank">
+      <img src="https://github.com/hotosm/raw-data-api-py/actions/workflows/pytest.yml/badge.svg?branch=main" alt="Test">
+  </a> -->
+  <a href="https://pypi.org/project/raw-data-api-py" target="_blank">
+      <img src="https://img.shields.io/pypi/v/raw-data-api-py?color=%2334D058&label=pypi%20package" alt="Package version">
+  </a>
+  <a href="https://pypistats.org/packages/raw-data-api-py" target="_blank">
+      <img src="https://img.shields.io/pypi/dm/raw-data-api-py.svg" alt="Downloads">
+  </a>
+  <a href="https://results.pre-commit.ci/latest/github/hotosm/raw-data-api-py/main" target="_blank">
+      <img src="https://results.pre-commit.ci/badge/github/hotosm/raw-data-api-py/main.svg" alt="Pre-Commit">
+  </a>
+  <a href="https://github.com/hotosm/raw-data-api-py/blob/main/LICENSE.md" target="_blank">
+      <img src="https://img.shields.io/github/license/hotosm/raw-data-api-py.svg" alt="License">
+  </a>
+</p>
+
+---
+
+📖 **Documentation**: <a href="https://hotosm.github.io/raw-data-api-py/" target="_blank">https://hotosm.github.io/raw-data-api-py/</a>
+
+🖥️ **Source Code**: <a href="https://github.com/hotosm/raw-data-api-py" target="_blank">https://github.com/hotosm/raw-data-api-py</a>
+
+---
+
+<!-- markdownlint-enable -->
 
 ## Installation
 
