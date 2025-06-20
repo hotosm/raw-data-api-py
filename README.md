@@ -128,6 +128,24 @@ client = RawDataClient(config)
 result = await client.get_osm_data(geometry, **params)
 ```
 
+### Streaming Data Directly (No Download)
+
+```python
+from osm_data_client import RawDataOutputOptions
+
+# Do not download the file, just return the response
+options = RawDataOutputOptions(download_file=False)
+
+result = await client.get_osm_data(geometry, options, {
+    "outputType": "geojson",
+    "bindZip": False,
+})
+```
+
+> [!NOTE]
+> This configuration is best used with the bindZip=False
+> param and geojson output, as shown above.
+
 ### Controlling File Extraction
 
 ```python
