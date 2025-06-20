@@ -1,7 +1,7 @@
 import logging
 import asyncio
 import json
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union,Optional
 from aiohttp import ClientSession, ClientResponseError
 
 from .models import (
@@ -307,12 +307,19 @@ class RawDataClient:
         # Create metadata from the result
         metadata = RawDataApiMetadata.from_api_result(result, params)
         log.debug("Data metadata: %s", metadata)
-
+        
+        # Avoid downloading
+        if self.config.stream:
+            return result.get("result")
+        
         # Download the data
         return await self.api.download_to_disk(metadata, output_options)
 
-
-async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDataResult:
+async def get_osm_data(
+    geometry: Union[Dict[str, Any], str],
+    stream: Optional[bool] = None,
+    **kwargs
+) -> RawDataResult:
     """
     Get OSM data for a specified area.
 
@@ -324,6 +331,7 @@ async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDat
             - fileName: Name for the export file (default: "osm_export")
             - outputType: Format of the output (default: "geojson")
             - bindZip: Whether to retrieve results as a zip file (default: False)
+            - stream: Boolean whether to stream data url or not (default: False)
             - filters: Dictionary of filters to apply
             - geometryType: List of geometry types to include
 
@@ -336,5 +344,8 @@ async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDat
         TaskPollingError: If polling the task status fails
         DownloadError: If downloading data fails
     """
-    client = RawDataClient()
+    config = RawDataClientConfig.default()
+    if stream:
+        config.stream = stream
+    client = RawDataClient(config=config)
     return await client.get_osm_data(geometry, **kwargs)
