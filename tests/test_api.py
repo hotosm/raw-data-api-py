@@ -123,9 +123,7 @@ class TestAPIIntegration:
         )
         cleanup_files.append(first_result.path)
 
-        assert first_result.exists(), (
-            f"Result file {first_result.path} does not exist"
-        )
+        assert first_result.exists(), f"Result file {first_result.path} does not exist"
         assert first_result.suffix() == ".zip", (
             f"Expected ZIP file, got path {first_result.path}"
         )
@@ -154,9 +152,7 @@ class TestAPIIntegration:
             )
 
         # 3. Test streaming result
-        output_options = RawDataOutputOptions(
-            download_file=False
-        )
+        output_options = RawDataOutputOptions(download_file=False)
 
         # Create a new file name to avoid conflicts
         params["fileName"] = "test_stream_data"

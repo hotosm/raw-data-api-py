@@ -313,16 +313,13 @@ class RawDataClient:
             return await self.api.download_to_disk(metadata, output_options)
 
         # Skip download and return directly
-        return RawDataResult(
-            metadata=metadata,
-            data=result.get("result", {})
-        )
+        return RawDataResult(metadata=metadata, data=result.get("result", {}))
 
 
 async def get_osm_data(
-        geometry: dict[str, Any] | str,
-        output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
-        **kwargs,
+    geometry: dict[str, Any] | str,
+    output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
+    **kwargs,
 ) -> RawDataResult:
     """
     Get OSM data for a specified area.
