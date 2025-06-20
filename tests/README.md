@@ -11,7 +11,8 @@ API and file system.
 Run all integration tests:
 
 ```bash
-python tests/run_tests.py
+uv sync --group test
+uv run python tests/run_tests.py
 ```
 
 ### Skipping API Tests
@@ -19,7 +20,7 @@ python tests/run_tests.py
 If you want to skip tests that make actual API calls:
 
 ```bash
-SKIP_API_TESTS=1 python tests/run_tests.py
+SKIP_API_TESTS=1 uv run python tests/run_tests.py
 ```
 
 ### Running Specific Tests
@@ -28,10 +29,10 @@ To run specific tests, use the `TEST_PATTERN` environment variable:
 
 ```bash
 # Run only CLI help test
-TEST_PATTERN="test_cli.py::TestCliIntegration::test_cli_help" python tests/run_tests.py
+TEST_PATTERN="test_cli.py::TestCliIntegration::test_cli_help" uv run python tests/run_tests.py
 
 # Run all CLI tests
-TEST_PATTERN="test_cli.py" python tests/run_tests.py
+TEST_PATTERN="test_cli.py" uv run python tests/run_tests.py
 ```
 
 ## Test Data

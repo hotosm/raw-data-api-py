@@ -1,7 +1,7 @@
 import logging
 import asyncio
 import json
-from typing import Dict, Any, Union
+from typing import Any
 from aiohttp import ClientSession, ClientResponseError
 
 from .models import (
@@ -41,7 +41,7 @@ class RawDataAPI:
 
     async def request_snapshot(
         self, geometry: GeometryInput, params: RequestParams
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Request a snapshot of OSM data.
 
@@ -95,7 +95,7 @@ class RawDataAPI:
 
     async def poll_task_status(
         self, task_link: str, polling_interval: int = 2
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Poll the API to check task status until completion.
 
@@ -247,7 +247,7 @@ class RawDataClient:
 
     async def get_osm_data(
         self,
-        geometry: Union[Dict[str, Any], str],
+        geometry: dict[str, Any] | str,
         output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
         **kwargs,
     ) -> RawDataResult:
@@ -265,7 +265,7 @@ class RawDataClient:
                 - geometryType: List of geometry types to include
 
         Returns:
-            Path to the downloaded data file or directory
+            Object containing metadata, plus a filepath or data.
 
         Raises:
             ValidationError: If inputs are invalid
@@ -308,11 +308,19 @@ class RawDataClient:
         metadata = RawDataApiMetadata.from_api_result(result, params)
         log.debug("Data metadata: %s", metadata)
 
-        # Download the data
-        return await self.api.download_to_disk(metadata, output_options)
+        if output_options.download_file:
+            # Download the data
+            return await self.api.download_to_disk(metadata, output_options)
+
+        # Skip download and return directly
+        return RawDataResult(metadata=metadata, data=result.get("result", {}))
 
 
-async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDataResult:
+async def get_osm_data(
+    geometry: dict[str, Any] | str,
+    output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
+    **kwargs,
+) -> RawDataResult:
     """
     Get OSM data for a specified area.
 
@@ -320,6 +328,7 @@ async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDat
 
     Args:
         geometry: GeoJSON geometry object or string
+        output_options: Options for controlling output behavior
         **kwargs: Additional parameters for customizing the request
             - fileName: Name for the export file (default: "osm_export")
             - outputType: Format of the output (default: "geojson")
@@ -328,7 +337,7 @@ async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDat
             - geometryType: List of geometry types to include
 
     Returns:
-        Path to the downloaded data file or directory
+        Object containing metadata, plus a filepath or data.
 
     Raises:
         ValidationError: If inputs are invalid
@@ -336,5 +345,6 @@ async def get_osm_data(geometry: Union[Dict[str, Any], str], **kwargs) -> RawDat
         TaskPollingError: If polling the task status fails
         DownloadError: If downloading data fails
     """
-    client = RawDataClient()
-    return await client.get_osm_data(geometry, **kwargs)
+    config = RawDataClientConfig.default()
+    client = RawDataClient(config=config)
+    return await client.get_osm_data(geometry, output_options, **kwargs)

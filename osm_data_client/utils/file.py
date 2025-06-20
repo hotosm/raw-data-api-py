@@ -6,13 +6,13 @@ This module provides utility functions for working with files
 
 import json
 import logging
-from typing import Dict, Any
+from typing import Any
 from pathlib import Path
 
 log = logging.getLogger(__name__)
 
 
-def save_to_geojson(data: Dict[str, Any], file_path: str) -> Path:
+def save_to_geojson(data: dict[str, Any], file_path: str) -> Path:
     """
     Save GeoJSON data to a file.
 

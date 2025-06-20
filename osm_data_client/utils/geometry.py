@@ -5,14 +5,14 @@ This module provides utility functions for working with GeoJSON geometry objects
 """
 
 import logging
-from typing import Dict, Any
+from typing import Any
 
 log = logging.getLogger(__name__)
 
 
 def bbox_to_polygon(
     min_x: float, min_y: float, max_x: float, max_y: float
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Convert a bounding box to a GeoJSON polygon.
 
