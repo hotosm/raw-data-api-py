@@ -316,9 +316,7 @@ class RawDataClient:
         return await self.api.download_to_disk(metadata, output_options)
 
 
-async def get_osm_data(
-    geometry: Union[Dict[str, Any], str], stream: Optional[bool] = None, **kwargs
-) -> RawDataResult:
+async def get_osm_data(geometry: dict[str, Any] | str, **kwargs) -> RawDataResult:
     """
     Get OSM data for a specified area.
 
@@ -330,9 +328,9 @@ async def get_osm_data(
             - fileName: Name for the export file (default: "osm_export")
             - outputType: Format of the output (default: "geojson")
             - bindZip: Whether to retrieve results as a zip file (default: False)
-            - stream: Boolean whether to stream data url or not (default: False)
             - filters: Dictionary of filters to apply
             - geometryType: List of geometry types to include
+            - stream: Boolean whether to stream data url or not (default: False)
 
     Returns:
         Path to the downloaded data file or directory
@@ -344,7 +342,9 @@ async def get_osm_data(
         DownloadError: If downloading data fails
     """
     config = RawDataClientConfig.default()
-    if stream:
+
+    if (stream := kwargs.pop("stream", False)):
         config.stream = stream
+
     client = RawDataClient(config=config)
     return await client.get_osm_data(geometry, **kwargs)
