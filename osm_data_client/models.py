@@ -209,8 +209,12 @@ class RequestParams:
     @staticmethod
     def validate_bind_zip_compatibility(output_type, bind_zip):
         """Validate if the output format is compatible with bindZip=False"""
-        streaming_compatible_formats = ["geojson", "cog", "fgb"]  # Cloud Optimized GeoTIFF, FlatGeoBuf
-        
+        streaming_compatible_formats = [
+            "geojson",
+            "cog",
+            "fgb",
+        ]  # Cloud Optimized GeoTIFF, FlatGeoBuf
+
         if not bind_zip and output_type.lower() not in streaming_compatible_formats:
             log.warning(
                 f"Format '{output_type}' requires ZIP packaging. "
@@ -318,7 +322,7 @@ class RawDataClientConfig:
     base_api_url: str = "https://api-prod.raw-data.hotosm.org/v1"
     output_directory: Path = Path.cwd()
     stream: bool = False
-    
+
     @property
     def memory_threshold_bytes(self) -> int:
         """Convert memory threshold to bytes."""
