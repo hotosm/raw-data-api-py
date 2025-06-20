@@ -1,7 +1,7 @@
 import logging
 import asyncio
 import json
-from typing import Dict, Any, Union, Optional
+from typing import Any
 from aiohttp import ClientSession, ClientResponseError
 
 from .models import (
@@ -41,7 +41,7 @@ class RawDataAPI:
 
     async def request_snapshot(
         self, geometry: GeometryInput, params: RequestParams
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Request a snapshot of OSM data.
 
@@ -95,7 +95,7 @@ class RawDataAPI:
 
     async def poll_task_status(
         self, task_link: str, polling_interval: int = 2
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Poll the API to check task status until completion.
 
@@ -247,7 +247,7 @@ class RawDataClient:
 
     async def get_osm_data(
         self,
-        geometry: Union[Dict[str, Any], str],
+        geometry: dict[str, Any] | str,
         output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
         **kwargs,
     ) -> RawDataResult:

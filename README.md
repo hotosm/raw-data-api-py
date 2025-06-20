@@ -178,7 +178,7 @@ except APIRequestError as e:
 
 ```python
 async def get_osm_data(
-    geometry: Union[Dict[str, Any], str],
+    geometry: dict[str, Any] | str,
     **kwargs
 ) -> RawDataResult
 ```
@@ -189,7 +189,7 @@ async def get_osm_data(
 class RawDataClient:
     async def get_osm_data(
         self,
-        geometry: Union[Dict[str, Any], str],
+        geometry: dict[str, Any] | str,
         output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
         **kwargs
     ) -> RawDataResult

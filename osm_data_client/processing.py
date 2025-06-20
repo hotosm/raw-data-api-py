@@ -3,7 +3,7 @@ from pathlib import Path
 import logging
 import zipfile
 import json
-from typing import Optional, List
+from typing import Optional
 
 from .models import RawDataApiMetadata, AutoExtractOption, RawDataOutputOptions
 from .exceptions import DownloadError
@@ -28,7 +28,7 @@ class RawDataResult:
     metadata: RawDataApiMetadata
     extracted: bool = False
     original_path: Optional[Path] = None
-    extracted_files: Optional[List[Path]] = None
+    extracted_files: Optional[list[Path]] = None
 
     def exists(self) -> bool:
         """Check if the result file or directory exists."""
