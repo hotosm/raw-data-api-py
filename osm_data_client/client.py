@@ -343,7 +343,7 @@ async def get_osm_data(geometry: dict[str, Any] | str, **kwargs) -> RawDataResul
     """
     config = RawDataClientConfig.default()
 
-    if (stream := kwargs.pop("stream", False)):
+    if stream := kwargs.pop("stream", False):
         config.stream = stream
 
     client = RawDataClient(config=config)
