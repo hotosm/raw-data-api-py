@@ -321,7 +321,6 @@ class RawDataClientConfig:
     memory_threshold_mb: int = 50
     base_api_url: str = "https://api-prod.raw-data.hotosm.org/v1"
     output_directory: Path = Path.cwd()
-    stream: bool = False
 
     @property
     def memory_threshold_bytes(self) -> int:
@@ -338,6 +337,7 @@ class RawDataClientConfig:
 class RawDataOutputOptions:
     """Options for controlling how output data is handled."""
 
+    download_file: bool = True
     auto_extract: AutoExtractOption = AutoExtractOption.automatic
 
     @classmethod

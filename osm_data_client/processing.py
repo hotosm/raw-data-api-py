@@ -18,24 +18,36 @@ class RawDataResult:
 
     Attributes:
         path: Path to the final processed file or directory
+        data: dict representation of data
         metadata: Original metadata from the API response
         extracted: Whether the file was extracted from an archive
         original_path: Path to the original downloaded file (if different from path)
         extracted_files: List of files that were extracted (if applicable)
     """
 
-    path: Path
     metadata: RawDataApiMetadata
+    path: Optional[Path] = None
+    data: Optional[dict] = None
     extracted: bool = False
     original_path: Optional[Path] = None
     extracted_files: Optional[list[Path]] = None
 
     def exists(self) -> bool:
         """Check if the result file or directory exists."""
+        if not self.path:
+            return False
         return self.path.exists()
+
+    def suffix(self) -> str:
+        """Get file type suffix, if path exists."""
+        if not self.path:
+            return ""
+        return self.path.suffix
 
     def __str__(self) -> str:
         """Return string representation of the result."""
+        if not self.path:
+            return ""
         return str(self.path)
 
 
@@ -308,6 +320,7 @@ class OutputProcessor:
                 extract_dir.mkdir(parents=True, exist_ok=True)
                 output_base = extract_dir
             else:
+                extract_dir = "."
                 output_base = output_directory
 
             # Prepare a file list to track what we extract

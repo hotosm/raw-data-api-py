@@ -265,7 +265,7 @@ class RawDataClient:
                 - geometryType: List of geometry types to include
 
         Returns:
-            Path to the downloaded data file or directory
+            Object containing metadata, plus a filepath or data.
 
         Raises:
             ValidationError: If inputs are invalid
@@ -308,15 +308,22 @@ class RawDataClient:
         metadata = RawDataApiMetadata.from_api_result(result, params)
         log.debug("Data metadata: %s", metadata)
 
-        # Avoid downloading
-        if self.config.stream:
-            return result.get("result")
+        if output_options.download_file:
+            # Download the data
+            return await self.api.download_to_disk(metadata, output_options)
 
-        # Download the data
-        return await self.api.download_to_disk(metadata, output_options)
+        # Skip download and return directly
+        return RawDataResult(
+            metadata=metadata,
+            data=result.get("result", {})
+        )
 
 
-async def get_osm_data(geometry: dict[str, Any] | str, **kwargs) -> RawDataResult:
+async def get_osm_data(
+        geometry: dict[str, Any] | str,
+        output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
+        **kwargs,
+) -> RawDataResult:
     """
     Get OSM data for a specified area.
 
@@ -324,16 +331,16 @@ async def get_osm_data(geometry: dict[str, Any] | str, **kwargs) -> RawDataResul
 
     Args:
         geometry: GeoJSON geometry object or string
+        output_options: Options for controlling output behavior
         **kwargs: Additional parameters for customizing the request
             - fileName: Name for the export file (default: "osm_export")
             - outputType: Format of the output (default: "geojson")
             - bindZip: Whether to retrieve results as a zip file (default: False)
             - filters: Dictionary of filters to apply
             - geometryType: List of geometry types to include
-            - stream: Boolean whether to stream data url or not (default: False)
 
     Returns:
-        Path to the downloaded data file or directory
+        Object containing metadata, plus a filepath or data.
 
     Raises:
         ValidationError: If inputs are invalid
@@ -342,9 +349,5 @@ async def get_osm_data(geometry: dict[str, Any] | str, **kwargs) -> RawDataResul
         DownloadError: If downloading data fails
     """
     config = RawDataClientConfig.default()
-
-    if (stream := kwargs.pop("stream", False)):
-        config.stream = stream
-
     client = RawDataClient(config=config)
-    return await client.get_osm_data(geometry, **kwargs)
+    return await client.get_osm_data(geometry, output_options, **kwargs)

@@ -68,7 +68,7 @@ class TestAPIIntegration:
 
         # Clean up after test
         for file_path in created_files:
-            if file_path.exists():
+            if file_path and file_path.exists():
                 if file_path.is_dir():
                     shutil.rmtree(file_path)
                 else:
@@ -93,7 +93,7 @@ class TestAPIIntegration:
             assert result.exists(), f"Result file {result.path} does not exist"
 
             # Check if we got an actual file with content
-            if result.path.is_file():
+            if result.path and result.path.is_file():
                 file_size = result.path.stat().st_size
                 assert file_size > 0, f"Result file {result.path} is empty (0 bytes)"
                 print(f"Downloaded file size: {file_size} bytes")
@@ -104,7 +104,7 @@ class TestAPIIntegration:
     @pytest.mark.asyncio
     async def test_auto_extract_options(self, small_geometry, cleanup_files):
         """Test the different auto-extract options."""
-        # Test keeping as zip (force_zip)
+        # 1. Test keeping as zip (force_zip)
         output_options = RawDataOutputOptions(auto_extract=AutoExtractOption.force_zip)
 
         params = {
@@ -123,14 +123,14 @@ class TestAPIIntegration:
         )
         cleanup_files.append(first_result.path)
 
-        assert first_result.path.exists(), (
+        assert first_result.exists(), (
             f"Result file {first_result.path} does not exist"
         )
-        assert first_result.path.suffix == ".zip", (
-            f"Expected ZIP file, got {first_result.path.suffix}"
+        assert first_result.suffix() == ".zip", (
+            f"Expected ZIP file, got path {first_result.path}"
         )
 
-        # Test forcing extraction (force_extract)
+        # 2. Test forcing extraction (force_extract)
         output_options = RawDataOutputOptions(
             auto_extract=AutoExtractOption.force_extract
         )
@@ -143,15 +143,36 @@ class TestAPIIntegration:
         )
         cleanup_files.append(second_result.path)
 
-        assert second_result.path.exists(), (
+        assert second_result.exists(), (
             f"Result file {second_result.path} does not exist"
         )
 
         # Check if we got the expected file type (not a zip)
         if second_result.extracted:
-            assert second_result.path.suffix != ".zip", (
+            assert second_result.suffix() != ".zip", (
                 "Expected extracted file, got ZIP file"
             )
+
+        # 3. Test streaming result
+        output_options = RawDataOutputOptions(
+            download_file=False
+        )
+
+        # Create a new file name to avoid conflicts
+        params["fileName"] = "test_stream_data"
+
+        third_result = await client.get_osm_data(
+            small_geometry, output_options, **params
+        )
+        cleanup_files.append(third_result.path)
+
+        assert not third_result.exists(), (
+            f"Result file {second_result.path} was downloaded, but shouldn't have been"
+        )
+
+        # Check the data was assigned to property
+        assert isinstance(third_result.data, dict)
+        assert len(third_result.data) > 0
 
     @pytest.mark.asyncio
     async def test_different_formats(self, small_geometry, cleanup_files):
@@ -172,12 +193,12 @@ class TestAPIIntegration:
             cleanup_files.append(result.path)
 
             # Verify the result exists with helpful messages
-            assert result.path.exists(), (
+            assert result.exists(), (
                 f"Result file for {format_type} format does not exist"
             )
 
             # Check file size to ensure we got actual content
-            if result.path.is_file():
+            if result.path and result.path.is_file():
                 file_size = result.path.stat().st_size
                 assert file_size > 0, (
                     f"Result file for {format_type} format is empty (0 bytes)"
@@ -204,10 +225,10 @@ class TestAPIIntegration:
         cleanup_files.append(result.path)
 
         # Verify the result exists with helpful messages
-        assert result.path.exists(), f"Result file {result.path} does not exist"
+        assert result.exists(), f"Result file {result.path} does not exist"
 
         # Check file size
-        if result.path.is_file():
+        if result.path and result.path.is_file():
             file_size = result.path.stat().st_size
             assert file_size > 0, "Result file is empty (0 bytes)"
             print(f"Downloaded file size: {file_size} bytes")
