@@ -1,6 +1,6 @@
 import logging
 import json
-from typing import Dict, Any, Union, Optional, List, TypedDict, Tuple
+from typing import Any, Optional, TypedDict
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 class FilterDict(TypedDict, total=False):
     """TypedDict for filter specifications."""
 
-    tags: Dict[str, Any]
-    attributes: Dict[str, List[str]]
+    tags: dict[str, Any]
+    attributes: dict[str, list[str]]
 
 
 @dataclass
@@ -20,10 +20,10 @@ class GeometryInput:
     """Validated geometry input for OSM API requests."""
 
     type: str
-    coordinates: List[Any]
+    coordinates: list[Any]
 
     @classmethod
-    def from_input(cls, geometry: Union[Dict[str, Any], str]) -> "GeometryInput":
+    def from_input(cls, geometry: dict[str, Any] | str) -> "GeometryInput":
         """
         Create a GeometryInput from either a dictionary or a JSON string.
 
@@ -121,7 +121,7 @@ class GeometryInput:
             return False
         return -180 <= coord[0] <= 180 and -90 <= coord[1] <= 90
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary representation."""
         return {"type": self.type, "coordinates": self.coordinates}
 
@@ -134,7 +134,7 @@ class RequestParams:
     output_type: str = "geojson"
     bind_zip: bool = True
     filters: Optional[FilterDict] = None
-    geometry_type: Optional[List[str]] = None
+    geometry_type: Optional[list[str]] = None
 
     VALID_OUTPUT_TYPES = [
         "geojson",
@@ -189,7 +189,7 @@ class RequestParams:
 
         return instance
 
-    def to_api_params(self) -> Dict[str, Any]:
+    def to_api_params(self) -> dict[str, Any]:
         """Convert to API parameter dictionary."""
         # Convert to camelCase for API
         params = {
@@ -209,7 +209,11 @@ class RequestParams:
     @staticmethod
     def validate_bind_zip_compatibility(output_type, bind_zip):
         """Validate if the output format is compatible with bindZip=False"""
-        streaming_compatible_formats = ["geojson", "cog"]  # Cloud Optimized GeoTIFF
+        streaming_compatible_formats = [
+            "geojson",
+            "cog",
+            "fgb",
+        ]  # Cloud Optimized GeoTIFF, FlatGeoBuf
 
         if not bind_zip and output_type.lower() not in streaming_compatible_formats:
             log.warning(
@@ -231,11 +235,11 @@ class RawDataApiMetadata:
     file_name: str
     download_url: str
     is_zipped: bool
-    bbox: Optional[Tuple[float, float, float, float]] = None
+    bbox: Optional[tuple[float, float, float, float]] = None
 
     @classmethod
     def from_api_result(
-        cls, result: Dict[str, Any], params: RequestParams
+        cls, result: dict[str, Any], params: RequestParams
     ) -> "RawDataApiMetadata":
         """
         Create a RawDataApiMetadata from API result and request parameters.
@@ -333,6 +337,7 @@ class RawDataClientConfig:
 class RawDataOutputOptions:
     """Options for controlling how output data is handled."""
 
+    download_file: bool = True
     auto_extract: AutoExtractOption = AutoExtractOption.automatic
 
     @classmethod
