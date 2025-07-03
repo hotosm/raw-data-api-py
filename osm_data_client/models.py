@@ -133,6 +133,8 @@ class RequestParams:
     file_name: str = "osm_export"
     output_type: str = "geojson"
     bind_zip: bool = True
+    centroid: bool = False
+    use_st_within: bool = True
     filters: Optional[FilterDict] = None
     geometry_type: Optional[list[str]] = None
 
@@ -196,6 +198,8 @@ class RequestParams:
             "fileName": self.file_name,
             "outputType": self.output_type,
             "bindZip": self.bind_zip,
+            "centroid": self.centroid,
+            "useStWithin": self.use_st_within,
         }
 
         if self.filters:
