@@ -92,7 +92,7 @@ class RawDataAPI:
             except Exception as ex:
                 log.error("Unexpected error in API request: %s", str(ex))
                 raise APIRequestError(0, {}, str(ex)) from ex
-    
+
     async def request_plain_geojson_snapshot(
         self, geometry: GeometryInput, params: RequestParams
     ) -> dict[str, Any]:
@@ -338,11 +338,11 @@ class RawDataClient:
         # Validate inputs
         geometry_input = GeometryInput.from_input(geometry)
         params = RequestParams.from_kwargs(**kwargs)
-        
+
         if (
-            params.output_type == "geojson" and
-            params.bind_zip and
-            not output_options.download_file
+            params.output_type == "geojson"
+            and params.bind_zip
+            and not output_options.download_file
         ):
             log.info("Requesting OSM geojson data snapshot")
             return await self.api.request_plain_geojson_snapshot(geometry_input, params)
