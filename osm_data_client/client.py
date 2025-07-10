@@ -92,6 +92,60 @@ class RawDataAPI:
             except Exception as ex:
                 log.error("Unexpected error in API request: %s", str(ex))
                 raise APIRequestError(0, {}, str(ex)) from ex
+    
+    async def request_plain_geojson_snapshot(
+        self, geometry: GeometryInput, params: RequestParams
+    ) -> dict[str, Any]:
+        """
+        Request a snapshot of OSM geojson data.
+
+        Args:
+            geometry: Validated GeoJSON geometry object
+            params: Validated request parameters
+
+        Returns:
+            Plain geojson of osm features
+
+        Raises:
+            APIRequestError: If the API request fails
+        """
+        payload = {
+            **params.to_api_params(),
+            "geometry": geometry.to_dict(),
+        }
+
+        log.debug("Requesting snapshot with params: %s", json.dumps(payload))
+
+        async with ClientSession() as session:
+            try:
+                async with session.post(
+                    f"{self.config.base_api_url}/snapshot/plain/",
+                    json=payload,
+                    headers=self.headers,
+                ) as response:
+                    response_data = await response.json()
+                    if response.status >= 400:
+                        log.error(
+                            "API request failed with status %d: %s",
+                            response.status,
+                            response_data,
+                        )
+                        raise APIRequestError(response.status, response_data)
+
+                    # Log queue information if available
+                    if "queue" in response_data:
+                        queue_position = response_data.get("queue", 0)
+                        if queue_position > 0:
+                            log.info("Request queued at position %d", queue_position)
+
+                    log.debug("Snapshot request successful: %s", response_data)
+                    return response_data
+            except ClientResponseError as ex:
+                log.error("API client error: %s", str(ex))
+                raise APIRequestError(ex.status, {}, str(ex)) from ex
+            except Exception as ex:
+                log.error("Unexpected error in API request: %s", str(ex))
+                raise APIRequestError(0, {}, str(ex)) from ex
 
     async def poll_task_status(
         self, task_link: str, polling_interval: int = 2
@@ -250,7 +304,7 @@ class RawDataClient:
         geometry: dict[str, Any] | str,
         output_options: RawDataOutputOptions = RawDataOutputOptions.default(),
         **kwargs,
-    ) -> RawDataResult:
+    ) -> RawDataResult | dict:
         """
         Get OSM data for a specified area.
 
@@ -284,6 +338,14 @@ class RawDataClient:
         # Validate inputs
         geometry_input = GeometryInput.from_input(geometry)
         params = RequestParams.from_kwargs(**kwargs)
+        
+        if (
+            params.output_type == "geojson" and
+            params.bind_zip and
+            not output_options.download_file
+        ):
+            log.info("Requesting OSM geojson data snapshot")
+            return await self.api.request_plain_geojson_snapshot(geometry_input, params)
 
         # Request snapshot
         log.info("Requesting OSM data snapshot for %s", params.file_name)
