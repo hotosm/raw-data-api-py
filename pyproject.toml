@@ -1,6 +1,6 @@
 [project]
 name = "raw-data-api-py"
-version = "0.2.0"
+version = "0.3.0"
 description = "A Python API wrapper for the raw-data-api service."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -38,7 +38,7 @@ asyncio_default_fixture_loop_scope="session"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.2.0"
+version = "0.3.0"
 version_files = [
     "pyproject.toml:version",
     "osm_data_client/__version__.py",

@@ -1,3 +1,9 @@
+## 0.3.0 (2025-07-10)
+
+### Feat
+
+- Request plain geojson output
+
 ## 0.2.0 (2025-07-03)
 
 ### Feat
