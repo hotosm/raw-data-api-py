@@ -1,12 +1,11 @@
-from dataclasses import dataclass
-from pathlib import Path
+import json
 import logging
 import zipfile
-import json
-from typing import Optional
+from dataclasses import dataclass
+from pathlib import Path
 
-from .models import RawDataApiMetadata, AutoExtractOption, RawDataOutputOptions
 from .exceptions import DownloadError
+from .models import AutoExtractOption, RawDataApiMetadata, RawDataOutputOptions
 
 log = logging.getLogger(__name__)
 
@@ -26,11 +25,11 @@ class RawDataResult:
     """
 
     metadata: RawDataApiMetadata
-    path: Optional[Path] = None
-    data: Optional[dict] = None
+    path: Path | None = None
+    data: dict | None = None
     extracted: bool = False
-    original_path: Optional[Path] = None
-    extracted_files: Optional[list[Path]] = None
+    original_path: Path | None = None
+    extracted_files: list[Path] | None = None
 
     def exists(self) -> bool:
         """Check if the result file or directory exists."""

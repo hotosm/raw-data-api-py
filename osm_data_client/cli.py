@@ -8,15 +8,15 @@ the Raw Data API.
 import argparse
 import asyncio
 import json
-import sys
 import logging
+import sys
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from importlib.metadata import version, PackageNotFoundError
 
 from .client import RawDataClient
+from .exceptions import OSMClientError
 from .models import AutoExtractOption, RawDataClientConfig, RawDataOutputOptions
 from .utils.geometry import bbox_to_polygon
-from .exceptions import OSMClientError
 
 log = logging.getLogger(__name__)
 
