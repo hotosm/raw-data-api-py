@@ -1,19 +1,19 @@
-import logging
 import asyncio
 import json
+import logging
 from typing import Any
-from aiohttp import ClientSession, ClientResponseError
 
+from aiohttp import ClientResponseError, ClientSession
+
+from .exceptions import APIRequestError, DownloadError, TaskPollingError
 from .models import (
     GeometryInput,
-    RequestParams,
     RawDataApiMetadata,
-    RawDataOutputOptions,
     RawDataClientConfig,
+    RawDataOutputOptions,
+    RequestParams,
 )
-from .exceptions import APIRequestError, TaskPollingError, DownloadError
 from .processing import OutputProcessor, RawDataResult
-
 
 log = logging.getLogger(__name__)
 
@@ -213,9 +213,7 @@ class RawDataAPI:
                     raise
                 except Exception as ex:
                     log.error("Error polling task status: %s", str(ex))
-                    raise TaskPollingError(
-                        f"Error polling task status: {str(ex)}"
-                    ) from ex
+                    raise TaskPollingError(f"Error polling task status: {ex!s}") from ex
 
     async def download_to_disk(
         self,
@@ -242,43 +240,43 @@ class RawDataAPI:
         log.info("Downloading data to %s (%s bytes)", file_path, data.size_bytes)
 
         try:
-            async with ClientSession() as session:
-                async with session.get(
-                    data.download_url, headers=self.headers
-                ) as response:
-                    if response.status >= 400:
-                        log.error("Download failed with status %d", response.status)
-                        raise DownloadError(
-                            f"Download failed with status {response.status}"
-                        )
+            async with (
+                ClientSession() as session,
+                session.get(data.download_url, headers=self.headers) as response,
+            ):
+                if response.status >= 400:
+                    log.error("Download failed with status %d", response.status)
+                    raise DownloadError(
+                        f"Download failed with status {response.status}"
+                    )
 
-                    with open(file_path, "wb") as f:
-                        log.debug("Streaming file contents using 1MB chunks")
-                        downloaded_bytes = 0
-                        async for chunk in response.content.iter_chunked(
-                            1024 * 1024
-                        ):  # 1MB chunks
-                            f.write(chunk)
-                            downloaded_bytes += len(chunk)
-                            if (
-                                data.size_bytes > 10 * 1024 * 1024
-                                and downloaded_bytes % (10 * 1024 * 1024) == 0
-                            ):
-                                progress = (downloaded_bytes / data.size_bytes) * 100
-                                log.info(
-                                    "Download progress: %.1f%% (%d/%d bytes)",
-                                    progress,
-                                    downloaded_bytes,
-                                    data.size_bytes,
-                                )
+                with open(file_path, "wb") as f:
+                    log.debug("Streaming file contents using 1MB chunks")
+                    downloaded_bytes = 0
+                    async for chunk in response.content.iter_chunked(
+                        1024 * 1024
+                    ):  # 1MB chunks
+                        f.write(chunk)
+                        downloaded_bytes += len(chunk)
+                        if (
+                            data.size_bytes > 10 * 1024 * 1024
+                            and downloaded_bytes % (10 * 1024 * 1024) == 0
+                        ):
+                            progress = (downloaded_bytes / data.size_bytes) * 100
+                            log.info(
+                                "Download progress: %.1f%% (%d/%d bytes)",
+                                progress,
+                                downloaded_bytes,
+                                data.size_bytes,
+                            )
 
-                    log.info("Download complete: %s", file_path)
+                log.info("Download complete: %s", file_path)
 
-                    return await processor.process_download(file_path, data)
+                return await processor.process_download(file_path, data)
 
         except Exception as ex:
             log.error("Error downloading data: %s", str(ex))
-            raise DownloadError(f"Error downloading data: {str(ex)}") from ex
+            raise DownloadError(f"Error downloading data: {ex!s}") from ex
 
 
 class RawDataClient:
