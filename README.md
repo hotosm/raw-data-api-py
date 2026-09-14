@@ -64,17 +64,20 @@ pattern:
 import asyncio
 from osm_data_client import get_osm_data
 
+
 async def main():
     # Define area of interest
     geometry = {
         "type": "Polygon",
-        "coordinates": [[
-            [-73.98, 40.75],  # NYC area
-            [-73.98, 40.76],
-            [-73.97, 40.76],
-            [-73.97, 40.75],
-            [-73.98, 40.75]
-        ]]
+        "coordinates": [
+            [
+                [-73.98, 40.75],  # NYC area
+                [-73.98, 40.76],
+                [-73.97, 40.76],
+                [-73.97, 40.75],
+                [-73.98, 40.75],
+            ]
+        ],
     }
 
     # Request building data
@@ -88,10 +91,11 @@ async def main():
                     "building": []  # All buildings
                 }
             }
-        }
+        },
     )
 
     print(f"Data downloaded to: {result.path}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -136,10 +140,14 @@ from osm_data_client import RawDataOutputOptions
 # Do not download the file, just return the response
 options = RawDataOutputOptions(download_file=False)
 
-result = await client.get_osm_data(geometry, options, {
-    "outputType": "geojson",
-    "bindZip": False,
-})
+result = await client.get_osm_data(
+    geometry,
+    options,
+    {
+        "outputType": "geojson",
+        "bindZip": False,
+    },
+)
 ```
 
 > [!NOTE]
@@ -162,16 +170,12 @@ result = await client.get_osm_data(geometry, options, **params)
 ```python
 # GeoJSON example
 result = await get_osm_data(
-    geometry,
-    outputType="geojson",
-    filters={"tags": {"all_geometry": {"building": []}}}
+    geometry, outputType="geojson", filters={"tags": {"all_geometry": {"building": []}}}
 )
 
 # Shapefile example
 result = await get_osm_data(
-    geometry,
-    outputType="shp",
-    filters={"tags": {"all_geometry": {"highway": []}}}
+    geometry, outputType="shp", filters={"tags": {"all_geometry": {"highway": []}}}
 )
 ```
 
@@ -226,9 +230,9 @@ class RawDataClientConfig:
 
 ```python
 class AutoExtractOption(Enum):
-    automatic = auto()     # Decide based on format and size
-    force_zip = auto()     # Always keep as zip
-    force_extract = auto() # Always extract
+    automatic = auto()  # Decide based on format and size
+    force_zip = auto()  # Always keep as zip
+    force_extract = auto()  # Always extract
 ```
 
 ## CLI Options

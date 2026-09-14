@@ -9,24 +9,23 @@ Raw Data API provided by the Humanitarian OpenStreetMap Team (HOT).
 # TODO why do we have this line?
 # logging.getLogger(__name__).addHandler(logging.NullHandler())
 
+from osm_data_client.client import RawDataAPI, RawDataClient, get_osm_data
 from osm_data_client.exceptions import (
-    OSMClientError,
-    ValidationError,
     APIRequestError,
-    TaskPollingError,
     DownloadError,
+    OSMClientError,
+    TaskPollingError,
+    ValidationError,
 )
-
 from osm_data_client.models import (
-    GeometryInput,
-    RequestParams,
-    RawDataApiMetadata,
     AutoExtractOption,
+    GeometryInput,
+    RawDataApiMetadata,
     RawDataClientConfig,
     RawDataOutputOptions,
+    RequestParams,
 )
 from osm_data_client.processing import RawDataResult
-from osm_data_client.client import get_osm_data, RawDataClient, RawDataAPI
 
 __version__ = "0.1.0"
 
