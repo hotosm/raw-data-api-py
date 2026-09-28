@@ -9,8 +9,6 @@ when interacting with the Raw Data API.
 class OSMClientError(Exception):
     """Base exception class for all OSM client errors."""
 
-    pass
-
 
 class ValidationError(OSMClientError):
     """
@@ -18,8 +16,6 @@ class ValidationError(OSMClientError):
 
     This can occur when invalid geometry or request parameters are provided.
     """
-
-    pass
 
 
 class APIRequestError(OSMClientError):
@@ -44,8 +40,6 @@ class TaskPollingError(OSMClientError):
     This can occur if the task tracking endpoint returns an error or becomes unavailable during polling.
     """
 
-    pass
-
 
 class DownloadError(OSMClientError):
     """
@@ -54,5 +48,3 @@ class DownloadError(OSMClientError):
     This can occur due to network issues, insufficient disk space, or when the
     downloaded file is corrupted or in an unexpected format.
     """
-
-    pass
