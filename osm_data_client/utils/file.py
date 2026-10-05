@@ -6,8 +6,8 @@ This module provides utility functions for working with files
 
 import json
 import logging
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 log = logging.getLogger(__name__)
 
