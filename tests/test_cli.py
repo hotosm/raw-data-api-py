@@ -1,10 +1,11 @@
-import os
 import json
-import subprocess
+import os
 import shutil
+import subprocess
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 BASE_DIR = Path(__file__).parent
 TEST_DIR = BASE_DIR / "test_data"

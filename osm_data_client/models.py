@@ -1,9 +1,9 @@
-import logging
 import json
-from typing import Any, Optional, TypedDict
+import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
+from typing import Any, TypedDict
 
 log = logging.getLogger(__name__)
 
@@ -135,8 +135,8 @@ class RequestParams:
     bind_zip: bool = True
     centroid: bool = False
     use_st_within: bool = True
-    filters: Optional[FilterDict] = None
-    geometry_type: Optional[list[str]] = None
+    filters: FilterDict | None = None
+    geometry_type: list[str] | None = None
 
     VALID_OUTPUT_TYPES = [
         "geojson",
@@ -239,7 +239,7 @@ class RawDataApiMetadata:
     file_name: str
     download_url: str
     is_zipped: bool
-    bbox: Optional[tuple[float, float, float, float]] = None
+    bbox: tuple[float, float, float, float] | None = None
 
     @classmethod
     def from_api_result(
@@ -321,7 +321,7 @@ class AutoExtractOption(Enum):
 class RawDataClientConfig:
     """Configuration for Raw Data API client."""
 
-    access_token: Optional[str] = None
+    access_token: str | None = None
     memory_threshold_mb: int = 50
     base_api_url: str = "https://api-prod.raw-data.hotosm.org/v1"
     output_directory: Path = Path.cwd()
