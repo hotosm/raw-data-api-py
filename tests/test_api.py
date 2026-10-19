@@ -1,14 +1,15 @@
-import pytest
 import os
 import shutil
 from pathlib import Path
 
+import pytest
+
 from osm_data_client import (
-    get_osm_data,
-    RawDataClient,
-    RawDataOutputOptions,
     AutoExtractOption,
+    RawDataClient,
     RawDataClientConfig,
+    RawDataOutputOptions,
+    get_osm_data,
 )
 from osm_data_client.exceptions import ValidationError
 
@@ -99,7 +100,7 @@ class TestAPIIntegration:
                 print(f"Downloaded file size: {file_size} bytes")
 
         except Exception as e:
-            pytest.fail(f"API call failed: {str(e)}")
+            pytest.fail(f"API call failed: {e!s}")
 
     @pytest.mark.asyncio
     async def test_auto_extract_options(self, small_geometry, cleanup_files):
@@ -240,7 +241,7 @@ class TestAPIIntegration:
 
         with pytest.raises(ValidationError, match="Geometry type") as excinfo:
             await get_osm_data(invalid_geometry, fileName="test_invalid")
-        print(f"Validation error for invalid geometry: {str(excinfo.value)}")
+        print(f"Validation error for invalid geometry: {excinfo.value!s}")
 
         # Test invalid format
         valid_geometry = {
@@ -260,4 +261,4 @@ class TestAPIIntegration:
             await get_osm_data(
                 valid_geometry, fileName="test_invalid", outputType="invalid_format"
             )
-        print(f"Validation error for invalid format: {str(excinfo.value)}")
+        print(f"Validation error for invalid format: {excinfo.value!s}")
