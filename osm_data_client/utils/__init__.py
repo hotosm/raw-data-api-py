@@ -1,4 +1,3 @@
-from . import geometry
-from . import file
+from . import file, geometry
 
-__all__ = ["geometry", "file"]
+__all__ = ["file", "geometry"]
