@@ -12,8 +12,8 @@ TEST_PATTERN="test_cli.py::TestCliIntegration::test_cli_help" python tests/run_t
 """
 
 import os
-import sys
 import subprocess
+import sys
 
 
 def main():
